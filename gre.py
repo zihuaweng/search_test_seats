@@ -9,8 +9,8 @@ from io import BytesIO
 
 os.environ['MOZ_HEADLESS'] = '1'
 
-username = "xxxx"
-passwd = 'xxxx'
+username = "xxx"
+passwd = 'xxx'
 
 
 def open_url():
@@ -26,7 +26,8 @@ def login(driver):
     driver.find_element_by_id("neeaId").send_keys(username)
     driver.find_element_by_id("password").send_keys(passwd)
     driver.find_element_by_id("checkImageCode").click()
-    driver.implicitly_wait(10)
+    driver.find_element_by_id("checkImageCode").click()
+    time.sleep(3)
     image = driver.find_element_by_id('chkImg').screenshot_as_png
     im = Image.open(BytesIO(image))
     im.save('tmp.png')
@@ -81,8 +82,10 @@ def get_seats(driver):
         if match == 0:
             print('Soooo sad!!!--{}--没有考位'.format(date))
 
+
+        time.sleep(2)
         driver.find_element_by_xpath('//*[@id="sites_BackDate"]').click()
-        time.sleep(1)
+        time.sleep(2)
 
 
 if __name__ == '__main__':
@@ -90,6 +93,5 @@ if __name__ == '__main__':
     driver = login(driver)
 
     driver = get_seats(driver)
-    driver.quit()
 
     print('查询结束.')
