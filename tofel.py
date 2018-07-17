@@ -74,7 +74,6 @@ def get_zuowei(driver, month, are):
     os.system(command)
     print('验证码：')
     codeContent2 = input()
-    file_name = os.path.join(image_dir, codeContent2 + '.png')
 
     driver.find_element_by_name("afCalcResult").send_keys(codeContent2)
     driver.find_element_by_name("submit").click()
@@ -85,7 +84,6 @@ def get_zuowei(driver, month, are):
         get_zuowei(driver, month, are)
     else:
         print('输入正确!')
-        im.save(file_name)
         content = driver.page_source
         driver.implicitly_wait(10)
         time1 = re.findall(r'<tr bgcolor="#FFCC99">(.*?)</tr>', content, re.S)[0]  # 匹配时间地区
@@ -117,14 +115,18 @@ if __name__ == '__main__':
     driver = login(driver)
     driver = search_zuowei(driver)
 
-    for i in range(7, 12):
-        test_month = '20180' + str(i)
+    for i in range(8, 12):
+        if i < 10:
+            test_month = '20180' + str(i)
+        else:
+            test_month = '2018' + str(i)
         try:
             driver = get_zuowei(driver, test_month, 'Beijing')
             driver.back()
             driver.refresh()
             time.sleep(15)
         except Exception as e:
+            print(e)
             with open('error.txt', 'a') as f:
                 f.write("{}{}-Beijing\n".format(e, test_month))
 
